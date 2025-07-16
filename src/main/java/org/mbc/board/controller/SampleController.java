@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 public class SampleController {
     // 컨트롤러는 url 생성과 프론트를 연결하는 부분으로 과거에 servlet-context.xml과 같은 역할을 한다.
 
-    @GetMapping("hello") // http://192.168.111.105:80/hello -> void -> hello.html
+    @GetMapping("/hello") // http://192.168.111.105:80/hello -> void -> hello.html
     public void hello(Model model){
 
         log.info("SampleController.hello메서드 실행.......");
@@ -27,7 +27,7 @@ public class SampleController {
 
     }
 
-    @GetMapping("ex/ex1") // http://192.168.111.105/ex/ex1 -> /resources/templates/ex/ex1.html
+    @GetMapping("/ex/ex1") // http://192.168.111.105/ex/ex1 -> /resources/templates/ex/ex1.html
     public void ex1(Model model){
         // 리스트 타입으로 데이터를 보내보자.
         List<String> list = Arrays.asList("김기원", "이현우", "홍경훈", "박채은", "양지민");
@@ -59,7 +59,7 @@ public class SampleController {
             return p3;
         }
     } // 이너 클래스 종료
-    @GetMapping("ex/ex2")
+    @GetMapping("/ex/ex2")
     public void ex2(Model model){
         log.info("SampleController.ex2 메서드 실행.....");
         // 이너 클래스를 사용해서 객체르르 뿌려보자.
@@ -84,5 +84,13 @@ public class SampleController {
         model.addAttribute("dto",sampleDTO); // 74행에 만들어진 객체 값
 
         // 리턴타입이 void이므로 /resources/templates/ex/ex2.html
+    }
+
+    @GetMapping("/ex/ex3") // http://192.168.111.105:80/ex/ex3 -> /resources/templates/ex/ex3.html
+    public void ex3(Model model){
+        log.info("SampleController.ex3메서드 실행.......");
+
+        model.addAttribute("arr", new String[]{"전민기, 김진우, 전혜진"});
+
     }
 }
