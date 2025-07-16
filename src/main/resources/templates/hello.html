@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> <!-- 타임리프용 프론트로 연동됨 -->
+<head><meta charset="UTF-8">
+    <title>hello</title>
+</head>
+<body>
+  <a href="https://www.thymeleaf.org/doc/articles/springmvcaccessdata.html">타입리프 사용법</a>
+
+  <h1 th:text="${msg}"></h1>
+  <h2> 컨트롤러에서 모델로 전송된 값</h2>
+  <h3> model.addAttribute("msg", "안녕하세요 자바의 종점입니다!!!!!"); </h3>
+  <h4> ${msg} 표현한다.</h4>
+</body>
+</html>
