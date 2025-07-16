@@ -49,6 +49,7 @@ spring.jpa.show-sql=true
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'                      /* 마리아 db 드라이버 */
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'  /* 테스트 junit 메서드 단위 테스트 */
+    
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'            /* junit용 코드 */
 
 
