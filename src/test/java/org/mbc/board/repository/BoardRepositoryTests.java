@@ -192,7 +192,105 @@ public class BoardRepositoryTests {
 
     }
 
+    // 쿼리dsl 테스트 진행
+    @Test
+    public void testSearch1(){
 
+        Pageable pageable = PageRequest.of(1,10, Sort.by("bno").descending());
 
+        Page<Board> result = boardRepository.search1(pageable); // 페이징 기법을 사용해서 title = 1 값을 찾아 오나?
+
+        result.getContent().forEach(board -> log.info(board));
+
+        //Hibernate:
+        //    select
+        //        b1_0.bno,
+        //        b1_0.content,
+        //        b1_0.moddate,
+        //        b1_0.regdate,
+        //        b1_0.title,
+        //        b1_0.writer
+        //    from
+        //        board b1_0
+        //    where
+        //        b1_0.title like ? escape '!' -> like 1 -> 조건이 1개일 경우
+        
+        //Hibernate: 
+        //    select
+        //        b1_0.bno,
+        //        b1_0.content,
+        //        b1_0.moddate,
+        //        b1_0.regdate,
+        //        b1_0.title,
+        //        b1_0.writer 
+        //    from
+        //        board b1_0 
+        //    where
+        //        (
+        //            b1_0.title like ? escape '!' 
+        //            or b1_0.content like ? escape '!' -> 조건이 2개 title, content
+        //        ) 
+        //        and b1_0.bno>?  ->  query.where(board.bno.gt(0L));
+        //    order by
+        //        b1_0.bno desc 
+        //    limit
+        //        ?, ? ->   this.getQuerydsl().applyPagination(pageable, query);
+        //Hibernate: 
+        //    select
+        //        count(b1_0.bno) 
+        //    from
+        //        board b1_0 
+        //    where
+        //        (
+        //            b1_0.title like ? escape '!' 
+        //            or b1_0.content like ? escape '!'
+        //        ) 
+        //        and b1_0.bno>?
+    }
+
+    @Test
+    public void testSearchAll(){
+    // 프론트에서 t가 선택되면 title, c가 선택되면 content, w가 선택되면 writer가 조건으로 제시됨.
+
+    String[] types = {"t", "w"}; // 검색 조건
+
+    String keyword = "10"; // 검색 단어
+
+    Pageable pageable = PageRequest.of(0,10, Sort.by("bno").descending());
+
+    Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
+
+    //Hibernate:
+        //    select
+        //        b1_0.bno,
+        //        b1_0.content,
+        //        b1_0.moddate,
+        //        b1_0.regdate,
+        //        b1_0.title,
+        //        b1_0.writer
+        //    from
+        //        board b1_0
+        //    where
+        //        (
+        //            b1_0.title like ? escape '!'
+        //            or b1_0.content like ? escape '!'
+        //            or b1_0.writer like ? escape '!'       // if( (types != null && types.length > 0) && keyword != null ){
+        //        )
+        //        and b1_0.bno>?
+        //    order by
+        //        b1_0.bno desc                             // PageRequest.of(0,10, Sort.by("bno").descending());
+        //    limit
+        //        ?, ?
+
+        log.info("전체 게시물 수 : " + result.getTotalElements());    // 99
+        log.info("총 페이지 수 : " + result.getTotalPages());         // 10
+        log.info("현재 페이지 번호 : " + result.getNumber());          // 0
+        log.info("페이지당 데이터 갯수 : " + result.getSize());         // 10
+        log.info("다음페이지 여부 : " + result.hasNext());             // true
+        log.info("시작페이지 여부 :" + result.isFirst());              // true
+
+        result.getContent().forEach(board -> log.info(board));
+
+    }
 
 } // 클래스 종료
