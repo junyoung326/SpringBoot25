@@ -5,91 +5,85 @@
     <title>리스트사용해보기</title>
 </head>
 <body>
-     <h4>[[${list}]]</h4>
-     <hr> <!--경계선-->
+    <h4> [[${list}]] </h4>  <!-- 인라인 표현법 : 태그 안쪽에 사용-->
+    <hr> <!--경계선-->
 
-     <h4 th:text="${list}"> </h4> <!-- 인라인 표현법 : 태그 안 쪽에 사용 -->
-     <hr> <!--경계선-->
-
-     <h4 th:text="${list}"> </h4> <!--태그 속성으로 사용-->
+    <h4 th:text="${list}"> </h4> <!--  태그 속성으로 사용 -->
 
     <hr>
-    <div th:with="num1 = ${10}, num2 = ${20}">  <!--임시 변수 선언-->
-        <h4 th:text="${num1 + num2}"></h4>      <!-- 표현식 안에서 계산이 된다.-->
+    <div th:with="num1 = ${10}, num2 = ${20}"> <!--임시 변수 선언 -->
+        <h4 th:text="${num1 + num2}"></h4> <!-- 표현식 안에서 계산이 된다.-->
     </div>
 
     <hr>
     <!-- 반복문 처리 방법 list -> str-->
-    <!-- 반복이 필요한 태그에 th:each를 (향상된 for) 적용 -->
+    <!-- 반복이 필요한 태그에 th:each를 (향상된 for) 적용   -->
     <ul>
         <li th:each="str:${list}" th:text="${str}"></li>
     </ul> <!--태그 안에 속성값으로 반복문 사용-->
 
-    <!-- th:block 별도의 태그로 사용도 가능 -->
+    <!-- thL:block 별도의 태그로 사용도 가능-->
     <ul>
         <th:block th:each="str:${list}">
             <li>[[${str}]]</li>
         </th:block>
+
     </ul>
 
-    <!-- 반복문에서 상태값을 가지고 있는 특수  기능!!!! -->
+    <!-- 반복문에서 상태값을 가지고 있는 특수 기능!!!!-->
     <!-- th:each를 처리할 때 내부 상태에 변수를 추가해서 사용가능 -->
-    <!-- status 변수 -> index/count/size/first/last/add/even 값을 사용 가능 -->
-
-     <ul>
-         status.index          리스트의 값 <br>
-         <li th:each="str,status:${list}">
-             [[${status.index}]] -- [[${str}]]
-         </li>
-
-     </ul>
+    <!-- status 변수 -> index/count/size/first/last/odd/even 값을 사용 가능 -->
+    <ul>
+            status.index           리스트의 값<br>
+        <li th:each="str,status:${list}">
+            [[${status.index}]] -- [[${str}]]
+        </li>
+    </ul>
 
     <ul>
-        status.count          리스트의 값 <br>
+        status.count           리스트의 값<br>
         <li th:each="str,status:${list}">
             [[${status.count}]] -- [[${str}]]
         </li>
-
     </ul>
 
     <hr>
-    <!-- if문과 홀짝용 태그를 이용해 표현 -->
+    <!--  if문과 홀짝용 태그를 이용해 표현  -->
     <ul>
         <li th:each="str,status:${list}">
-            <span th:if="${status.odd}">[[${status.index}]] 홀수(odd) --- [[${str}]]</span> <!--홀수이면!!-->
-            <span th:unless="${status.odd}">[[${status.index}]] 짝수(even) --- [[${str}]]</span>
+            <span th:if="${status.odd}">[[${status.index}]] 홀수(odd) --- [[${str}]]</span> <!--홀수 이면!!-->
+            <span th:unless="${status.odd}">[[${status.index}]] 짝수(even) --- [[${str}]] </span>
         </li>
     </ul>
-    <!-- 삼항 연산자용 코드 (조건)? 참 : 거짓 -->
+    <!-- 삼항 연산자용 코드  (조건)?  참 : 거짓 -->
     <ul>
         <li th:each="str,status:${list}">
-            <span th:text="${status.odd} ? '홀수--'+${str} : '거짓'"></span>
+            <span th:text="${status.odd} ? '홀수--'+${str} : '거짓' "></span>
         </li>
     </ul>
 
-    <!-- 스위치문 활용법 -->
+    <!-- 스위치 문 활용법 -->
     <ul>
         <li th:each="str,status:${list}">
-            <th:block th:switch="${status.index %3 }"> <!-- 인덱스를 3으로 나누었을 때 나머지 값 -->
-                <span th:case="0">인덱스를 3으로 나누었을 때 나머지가 0입니다.</span>
-                <span th:case="1">인덱스를 3으로 나누었을 때 나머지가 1입니다.</span>
-                <span th:case="2">인덱스를 3으로 나누었을 때 나머지가 2입니다.</span>
+            <th:block th:switch="${status.index % 3 }"> <!-- 인덱스를 3으로 나누었을 때 나머지 값-->
+                <span th:case="0"> 인덱스를 3으로 나누었을때 나머지가 0입니다.</span>
+                <span th:case="1"> 인덱스를 3으로 나누었을때 나머지가 1입니다.</span>
+                <span th:case="2"> 인덱스를 3으로 나누었을때 나머지가 2입니다.</span>
             </th:block>
         </li>
     </ul>
 
     <!-- 타입리프 링크 처리 -->
-    <!-- jsp는 링크 처리할 때 톰캣이 컨텍스트 루트를 프로젝트 명으로 생성하기 때문에 많은 문제가 있다. -->
-    <!-- @로 링크를 작성하기만 하면 컨텍스트를 알아온다. -->
+    <!-- jsp는 링크 처리할 때 톰켓이 컨텍스트 루트를 프로젝트 명으로 생성하기 때문에 많은 문제가 있다. -->
+    <!-- @로 링크를 작성하기만 하면 컨텍스트 루트를 알아온다. -->
     <a th:href="@{/hello}">컨트롤러에서 hello 경로를 찾는다.</a>
-
-    <!-- 링크의 쿼리스트링 처리 방법 -->
-    <a th:href="@{/hello(name='김기원',age=33)}">클릭 후 URL을 확인하세요!!!</a>
     <br>
-    <!-- 링크 한글처리 테스트 성공 http://192.168.111.105/hello?name=%EA%B9%80%EA%B8%B0%EC%9B%90&age=33 -->
+    <!-- 링크의 쿼리스트링 처리 방법-->
+    <a th:href="@{/hello(name='김기원',age=33)}">클릭후 URL을 확인하세용!!!!</a>
+    <br>
+    <!-- 링크 한글처리 테스트 성공 http://192.168.111.105/hello?name=%EA%B9%80%EA%B8%B0%EC%9B%90&age=33  -->
 
     <!-- 링크가 배열일 경우 자동으로 같은 이름의 파라미터 처리를 한다. -->
-    <!--<a th:href="@{/hello(types=${ {'요리사','건축가','운동선수','선생님'} },age=33)}">클릭 후 url 확인</a-->>
+    <!--<a th:href="@{/hello(types=${ {'요리사','건축가','운동선수','선생님'} },age=33)}">클릭후 url 확인</a>-->
 </body>
 </html>
-

@@ -10,7 +10,7 @@ public interface BoardSearch {
     Page<Board> search1(Pageable pageable);
     // 인터페이스에 구현체로 실제 동작은 구현 클래스에서 작성한다. (조장용)
 
-    // 실제로 구현할 코드 (다중 조건으로 제목, 내용, 작성자를 키워드와 매칭하여 select 처리함
+    //실제로 구현할 코드 (다중 조건으로 제목,내용,작성자를 키워드와 매칭하여 select 처리함
     Page<Board> searchAll(String[] types, String keyword, Pageable pageable);
-    //                 제목 t, 내용 c, 작성자 w,     like,    페이징 처리용(정렬, 검색, 페이지번호)
+    //                 제목t, 내용c, 작성자w      like      페이징 처리용(정렬,검색,페이지번호)
 }

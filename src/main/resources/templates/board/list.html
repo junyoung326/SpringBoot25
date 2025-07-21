@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+<!--     상단에 layout:decorator="~{layout/layout}" 은 기본 레이아웃을 layout/layout.html 파일을 사용하겠다라는 선언하는 것 입니다.-->
+<div layout:fragment="content">
+
+   <div class="row mt-3">
+      <form action="/board/list" method="get">
+         <div class="col">
+            <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+            <div class="input-group">
+               <div class="input-group-prepend">
+                  <select class="form-select" name="type">
+                     <option value="">---</option>
+                     <option value="t" th:selected="${pageRequestDTO.type =='t'}">제목</option>
+                     <option value="c" th:selected="${pageRequestDTO.type =='c'}">내용</option>
+                     <option value="w" th:selected="${pageRequestDTO.type =='w'}">작성자</option>
+                     <option value="tc" th:selected="${pageRequestDTO.type =='tc'}">제목 내용</option>
+                     <option value="tcw" th:selected="${pageRequestDTO.type =='tcw'}">제목 내용 작성자</option>
+                  </select>
+               </div>
+               <input type="text" class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
+               <div class="input-group-append">
+                  <button class="btn btn-outline-secondary searchBtn" type="submit">Search</button>
+                  <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
+                  <button class="btn btn-outline-secondary regBtn" type="button">새글</button>
+               </div>
+            </div>
+         </div>
+
+         <div class="card">
+            <div class="card-header">
+               Board List
+            </div>
+            <div class="card-body" >
+               <h5 class="card-title">Board List </h5>
+
+               <table class="table">
+                  <thead>
+                  <tr>
+                     <th scope="col">Bno</th>
+                     <th scope="col">Title</th>
+                     <th scope="col">Writer</th>
+                     <th scope="col">RegDate</th>
+                  </tr>
+                  </thead>
+
+                  <tbody th:with="link = ${pageRequestDTO.getLink()}">
+                  <tr th:each="dto:${responseDTO.dtoList}"  >
+                     <!--/*    for문이고 dto라는 변수에 list객체를 담는다.  */-->
+                     <th scope="row">[[${dto.bno}]]</th>
+                     <td>
+                        <a th:href="|@{/board/read(bno =${dto.bno})}&${link}|"> [[${dto.title}]] </a>
+                     </td>
+                     <td>[[${dto.writer}]]</td>
+                     <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</td>
+                  </tr>
+
+
+                  </tbody>
+               </table>
+
+               <div class="float-end">
+                  <ul class="pagination flex-wrap">
+
+                     <!-- For문으로 받아온 객체값 자바스크립트 변수에 넣어주기
+                     예) tr 태그 클릭시 화면이동 하고 싶을때, 특정 변수를 파라미터로 받아 값을 넘겨줄때!
+                     th:data 다음엔 아무이름이나 정해주면 된다. ( *th:data-별칭 ) 그리고 getAttribute로 loadDetailView 함수 파라미터에 값을 넣어준다.
+
+                     th:data-index="${user.index}"
+                         th:onclick="loadDetailView(this.getAttribute('data-index'))">
+                             <td th:text="${user.index}">1</td>
+                             <td th:text="${user.name}">Brian</td>
+                     -->
+
+                     <li class="page-item" th:if="${responseDTO.prev}">
+                        <a class="page-link" th:data-num="${responseDTO.start -1}">Previous</a>
+                        <!--/*   Previous 버튼 사용  */-->
+                     </li>
+
+                     <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                        <!--/*   특정 범위 숫자를 만듬. numbers.sequence(start, end, step)  */-->
+                        <li th:class="${responseDTO.page == i}?'page-item active':'page-item'" >
+                           <!--/*   responseDTO.page이 i와 같으면 th:class="'page-item active'"
+                             아니면 th:class="'page-item'" 적용 (버튼 색과 관련)
+                             */-->
+                           <a class="page-link"  th:data-num="${i}">[[${i}]]</a>
+                           <!--/*   /board/list?page=i   */-->
+                        </li>
+                     </th:block>
+
+                     <li class="page-item" th:if="${responseDTO.next}">
+                        <a class="page-link"  th:data-num="${responseDTO.end + 1}">Next</a>
+                        <!--/*   Next 버튼 사용  */-->
+                     </li>
+                  </ul>
+               </div>
+
+
+            </div><!--end card body-->
+         </div><!--end card-->
+      </form>
+   </div><!-- end col-->
+
+</div><!-- end row-->
+
+<!--   모달창 용 -->
+   <div class="modal" tabindex="-1">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">Modal title</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+               <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!--이벤트 처리 : 페이지 번호 클릭, 검색,필터링 조건-->
+<script layout:fragment="script" th:inline="javascript">
+
+   /*console.log("자바스크립트 fragment 테스트.....")*/
+   /*예전에는 자바스크립트를 짧게 줄여 쓰려고 jQuery등을 사용했는데 최근에는 원시적으로 돌아가려한다.*/
+   // addEventListener(동작,기능,(버블링:false,캡처링:true)
+   // https://29223.tistory.com/123
+   document.querySelector(".pagination").addEventListener("click",function (e){
+      e.preventDefault() // 원래 기능을 무시(고유 동작을 중단)
+      e.stopPropagation() // 상위 엘리먼트들로 이벤트 전파 중단. (버블링)
+
+      const target = e.target  // 이벤트에 타겟을 변수에 넣는다.
+
+      if(target.tagName !=='A'){
+         return   // A 태그가 아니면 돌아가라.
+      }
+
+      const num = target.getAttribute("data-num") // 페이지번호를 클릭하면 숫자가 num에 들어감.
+      //    <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+
+      const formObj = document.querySelector("form")
+      // <form action="/board/list" method="get">
+
+      formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+      // ` 백틱은 문자열과 변수등을 합쳐 넣을때
+      // <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+      // + <input type='hidden' name='page' value='${num}'>
+
+      formObj.submit() // 저장 적용
+
+   },false) // 버블링
+   // 하단에 페이징 번호를 클릭시 적용되는 기능 구현 종료
+
+   // clearBtn을 클릭시 기능
+   document.querySelector(".clearBtn").addEventListener("click",function (e){
+      e.preventDefault() // 원래 기능 무시
+      e.stopPropagation() // 버블링 금지
+
+      self.location = '/board/list'  // 초기화 버튼을 누르면 옵션없이 초기 리스트 보임
+   },false) // 버블링
+
+   // regBtn
+   document.querySelector(".regBtn").addEventListener("click",function (e){
+      e.preventDefault() // 원래 기능 무시
+      e.stopPropagation() // 버블링 금지
+
+      self.location = '/board/register'  // 초기화 버튼을 누르면 옵션없이 초기 리스트 보임
+   },false) // 버블링
+
+
+   //show modal
+   const result = [[${result}]]
+   // BoardController에 result = 게시물번호 처리용
+   const modal = new bootstrap.Modal(document.querySelector(".modal")) // 112행 모달 처리
+
+   if(result){
+      modal.show()
+   }
+
+</script>
+</html>

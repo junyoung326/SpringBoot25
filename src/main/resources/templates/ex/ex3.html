@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout1.html}" >
+      layout:decorate="~{layout/layout1.html}"  >
       <!-- 레이아웃에서 사용할 레이아웃 파일을 가져와 적용한다. -->
+
 <div layout:fragment="content">
 
-      <h1> 컨텐츠 부분입니다.</h1>
-      <h2> 나중에 이 부분이 변경되어 적용됩니다. </h2>
-      <h3> layout.html에 content 부분이 이 곳에 해당합니다. </h3>
+        <h1> 컨텐츠 부분입니다. </h1>
+        <h2> 나중에 이부분이 변경되어 적용 됩니다. </h2>
+        <h3> layout1.html에 content 부분이 이곳에 해당합니다.</h3>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
-      const arr = [[${arr}]] /* 컨트롤러에서 모델로 보낸 객체를 가져와 변수에 넣는다. */
-      console.log(arr)
+    const arr = [[${arr}]] /* 컨트롤러에서 모델로 보낸 객체를 가져와 변수에 넣는다. */
+    console.log(arr)
 </script>

@@ -12,18 +12,16 @@
     <div th:text="${dto}">sampleDTO로 넘어온 데이터 확인용</div>
     <hr><br>
 
-    <script th:inline="javascript"> /* 타입리프의 자바 스트립트 선언 방법 */
+    <script th:inline="javascript"> /* 타입리프에 자바 스크립트 선언 방법*/
 
-        const list=[[${list}]] // 모델에서 넘어온 객체를 list 변수에 넣음
-        const map=[[${map}]]
-        const dto=[[${dto}]]
+        const list =[[${list}]] // 모델에서 넘어온 객체를 list 변수에 넣음.
+        const map = [[${map}]]
+        const dto = [[${dto}]]
 
-        // 크롬 콘솔에 출력해보자.
+        // 크롬에 콘솔에 출력 해보자.
         console.log(list)
         console.log(map)
         console.log(dto)
-
-
     </script>
 </body>
 </html>
