@@ -1,6 +1,7 @@
 package org.mbc.board.repository.search;
 
 import org.mbc.board.domain.Board;
+import org.mbc.board.dto.BoardListReplyCountDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,4 +14,8 @@ public interface BoardSearch {
     //실제로 구현할 코드 (다중 조건으로 제목,내용,작성자를 키워드와 매칭하여 select 처리함
     Page<Board> searchAll(String[] types, String keyword, Pageable pageable);
     //                 제목t, 내용c, 작성자w      like      페이징 처리용(정렬,검색,페이지번호)
+    
+    // 게시판 리스트 /board/list 화면 출력용 메서드 (페이징, 정렬, 댓글수)
+    Page<BoardListReplyCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable);
+    //                                                 제목,내용,작성자    찾는단어       페이징처리,정렬
 }
