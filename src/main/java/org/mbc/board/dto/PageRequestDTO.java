@@ -26,7 +26,7 @@ public class PageRequestDTO {
     private int page = 1;  // 첫페이지
 
     @Builder.Default
-    private int size = 5; // 게시물 수
+    private int size = 10; // 게시물 수
 
     private String type ;  // t, c, w , t c, t w ,t w c  ..... (다중검색용)
 

@@ -1,5 +1,7 @@
 package org.mbc.board.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -30,5 +32,9 @@ public class ReplyDTO {
     @NotEmpty
     private String replyer ; // 댓글 작성자
 
-    private LocalDateTime regDate, modDate; // 등록일, 수정일
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime regDate;
+
+    @JsonIgnore
+    private LocalDateTime modDate; // 등록일, 수정일
 }
